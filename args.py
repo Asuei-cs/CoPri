@@ -42,7 +42,7 @@ def parse_args():
     parser.add_argument('--test_batch_size', type=int, default=256,
                         help='batch size for eval')
     
-    parser.add_argument('--num_epochs', default=1, type=int)
+    parser.add_argument('--num_epochs', default=500, type=int)
     parser.add_argument('--device', default='cuda:3', type=str,choices=["cuda","cpu","cuda:0","cuda:1","cuda:2","cuda:3"],)
     
     parser.add_argument("--log_freq", type=int, default=1, help="per epoch print res")

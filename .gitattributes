@@ -1,3 +1,0 @@
-Data/** filter=lfs diff=lfs merge=lfs -text
-Data/Rees46/train_data.csv filter=lfs diff=lfs merge=lfs -text
-*.csv filter=lfs diff=lfs merge=lfs -text
