@@ -1,0 +1,6 @@
+
+hidden_units: 64
+lamb: 0.8
+
+loss_type: 'CE'
+init_type: 'normal'

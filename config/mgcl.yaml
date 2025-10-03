@@ -1,0 +1,20 @@
+hidden_units: 64
+num_blocks: 2
+num_heads: 1
+
+loss_type: 'CE'
+init_type: 'normal'
+
+alpha: 0.5
+beta: 0.5
+gamma: 0.5
+
+opt_params: 
+  hidden_units: [64, 128]
+  num_blocks: [1,2,3]
+  # alpha: [0, 0.25, 0.5, 0.75, 1]
+  # beta: [0, 0.25, 0.5, 0.75, 1]
+  # gamma: [0, 0.25, 0.5, 0.75, 1]
+  # alpha: [0, 0.25, 0.5, 0.75, 1]
+  # beta: [0, 0.25, 0.5, 0.75, 1]
+  # gamma: [0, 0.25, 0.5, 0.75, 1]

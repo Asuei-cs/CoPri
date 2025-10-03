@@ -1,0 +1,18 @@
+hidden_units: 128
+t_num_blocks: 3
+s_num_blocks: 3
+
+w1: 0.5
+w2: 0.5
+w3: 1
+
+
+
+num_heads: 1
+loss_type: 'CE'
+init_type: 'normal'
+
+opt_params:
+  # hidden_units: [64, 128]
+  hidden_units: [64, 128]
+  num_blocks: [1,2,3]

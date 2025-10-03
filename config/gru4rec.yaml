@@ -1,0 +1,7 @@
+hidden_units: 128
+num_layers: 2
+
+opt_params:
+  hidden_units: [64, 128]
+  num_layers: [1, 2, 3]
+

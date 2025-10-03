@@ -1,0 +1,9 @@
+d_embed: 128 # embedding size
+n_attn: 1
+n_head: 2
+
+n_neg: 128
+
+temp: 0.75
+rd: 16  #4 16 64
+ri: 64  #4 16 64

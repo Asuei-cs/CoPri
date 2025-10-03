@@ -1,0 +1,10 @@
+hidden_units: 128
+num_blocks: 2
+num_heads: 1
+no_filters: False
+hidden_act: 'gelu'
+
+opt_params: 
+  hidden_units: [64, 128]
+
+
