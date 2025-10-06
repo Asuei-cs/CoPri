@@ -209,23 +209,18 @@ class HGNCDR(nn.Module):
         # pad mask
         pad_mask = mixed_seq == pad_val
 
-        # 目标域 mask
         target_mask = (mixed_seq <=self.args.itemnum1) & (~pad_mask)
-        # 源域 mask
         source_mask = (mixed_seq >self.args.itemnum1) & (~pad_mask)
 
         x_position = torch.zeros_like(mixed_seq, dtype=torch.long)
         y_position = torch.zeros_like(mixed_seq, dtype=torch.long)
 
-        # 目标域倒序编号
         target_cumsum = torch.flip(torch.cumsum(torch.flip(target_mask.int(), dims=[1]), dim=1), dims=[1])
         x_position[target_mask] = target_cumsum[target_mask]
 
-        # 源域倒序编号
         source_cumsum = torch.flip(torch.cumsum(torch.flip(source_mask.int(), dims=[1]), dim=1), dims=[1])
         y_position[source_mask] = source_cumsum[source_mask]
 
-        # 混合序列 position
         position = x_position + y_position
         position[pad_mask] = 0
 

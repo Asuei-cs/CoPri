@@ -114,7 +114,6 @@ class CDSASRec(nn.Module):
     def _init_weights(self, module):
         if self.args.init_type == "normal":
             # logger.info("use the normal init ")
-            # 原始的初始化方法
             if isinstance(module, (nn.Linear, nn.Embedding)):
                 module.weight.data.normal_(mean=0.0, std=0.02)
             elif isinstance(module, nn.LayerNorm):
@@ -123,7 +122,6 @@ class CDSASRec(nn.Module):
             if isinstance(module, nn.Linear) and module.bias is not None:
                 module.bias.data.zero_()
         else:
-            # Xavier初始化方法
             logger.info("use the xavier init ")
             for name, param in self.named_parameters():
                 try:
@@ -134,7 +132,6 @@ class CDSASRec(nn.Module):
     def seq_self_attention_layer(self, targetSeq, sourceSeq):
 
         has_sourceSeq = not np.all(sourceSeq == 0)
-        # 如果没有源领域，那么就跳过这部分。
         if  has_sourceSeq:
             source_timeline_mask = torch.BoolTensor(sourceSeq == 0).to(self.dev)
 

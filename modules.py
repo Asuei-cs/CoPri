@@ -241,7 +241,6 @@ class SelfAttention(nn.Module):
 class FilterLayer(nn.Module):
     def __init__(self, args):
         super(FilterLayer, self).__init__()
-        # 做完self-attention 做一个前馈全连接 LayerNorm 输出
         self.complex_weight = nn.Parameter(torch.randn(1, args.maxlen//2 + 1, args.hidden_units, 2, dtype=torch.float32) * 0.02)
         self.out_dropout = nn.Dropout(args.dropout_rate)
         self.LayerNorm = LayerNorm(args.hidden_units, eps=1e-12)

@@ -73,12 +73,6 @@ class Trainer:
         return total_metrics
 
     def get_batch_sort_score(self, ks, total_metrics, batch_pred_list, batch_truth_list):
-        # cur_Recall10 = []
-        # cur_Recall20 = []
-        # cur_Reall50 = []
-        # cur_NDCG10 = []
-        # cur_NDCG20 = []
-        # cur_NDCG50 = []
         
         cur_metrics = {f'Recall@{k}': [] for k in self.args.ks}
         cur_metrics.update({f'NDCG@{k}': [] for k in self.args.ks})
@@ -90,20 +84,10 @@ class Trainer:
             
                 total_metrics[f'Recall@{k}'] += recall                
                 total_metrics[f'NDCG@{k}'] += ndcg
-                # if k == 10:
-                #     cur_Recall10.append(recall)
-                #     cur_NDCG10.append(ndcg)
-                # elif k == 20:
-                #     cur_Recall20.append(recall)
-                #     cur_NDCG20.append(ndcg)
-                # elif k == 50:
-                #     cur_Reall50.append(recall)
-                #     cur_NDCG50.append(ndcg)
                 cur_metrics[f'Recall@{k}'].append(recall)
                 cur_metrics[f'NDCG@{k}'].append(ndcg)
                     
         return cur_metrics
-        # return total_metrics
 
     def toString(self, epoch, total_metrics):
         
@@ -264,7 +248,6 @@ class CDSRTrainer(Trainer):
                  
             cnt_total_items = sum(len(items) for items in truth_list)
 
-            # 统计用户真实交互的物品数量有多少 truth_list 中的数量 
             logger.info(f'本次评估的物品数量有{cnt_total_items}个')
             valid_user_num = len(dataloaders["eva_loader"].dataset)
             logger.info(f'current type user nums is {valid_user_num}')  
@@ -272,12 +255,7 @@ class CDSRTrainer(Trainer):
             for k in self.args.ks:
                 total_metrics[f'Recall@{k}'] /= valid_user_num
                 total_metrics[f'NDCG@{k}'] /= valid_user_num
-            
-            # output_dir = "different_user_analysis_k3000_increment"
-            # if not os.path.exists(output_dir):
-            #     os.makedirs(output_dir)
-            # res_df = pd.DataFrame(res_data)
-            # res_df.to_csv(f"./{output_dir}/different_user_res_{self.args.model}_{self.args.target_domain}_k{self.args.ks[-1]}.csv",index=False)
+
             
             return self.toString(epoch, total_metrics)
     

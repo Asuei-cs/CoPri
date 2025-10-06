@@ -215,8 +215,7 @@ class GCSAN(nn.Module):
             -1, -1, self.hidden_units
         )
         seq_hidden = torch.gather(hidden, dim=1, index=alias_inputs)
-        
-        # 使用完整序列而非仅最后一个时间步
+
         ht = seq_hidden
         a = seq_hidden
         attention_mask = self.get_attention_mask(item_seq)

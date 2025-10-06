@@ -160,7 +160,6 @@ def data_partition(parent_dir,fname,fname2,datasets):
             if key in dict1:
                 dict1[key].extend(dict2[key])
             else:
-                print("要求dict2中的键必须出现在dict1中")
                 raise KeyError(key)
             
     merge_dict(Time1_stage1,Time1_stage1_val)
@@ -244,7 +243,7 @@ def data_partition_leave_one_out(parent_dir, fname, fname2):
     d2_test_stage2 = []
     
     for _, group in d2_grouped:
-        if len(group) > 3:  # 确保训练集中有至少2条记录
+        if len(group) > 3:
             d2_train_stage1.append(group.iloc[:-2])
             d2_val_stage1.append(group.iloc[-2:-1])
             d2_test_stage2.append(group.iloc[-1:])
@@ -662,7 +661,7 @@ class CDSRDataset(baseDataset):
                 if nxt != 0: neg[idx] = random_neq(1, self.itemnum1 + 1, ts)
                 nxt = i
                 if nxt > self.itemnum1:
-                    print(f"errro:{ self.itemnum1}< {nxt} 不是这个领域的物品")
+                    print(f"errro:{ self.itemnum1}< {nxt} ")
                 idx -= 1
                 if idx == -1: break
 
@@ -786,14 +785,14 @@ class CDSRDataset(baseDataset):
         if self.eval_only_first:
             item_idx = items + neg_items
             if len(item_idx) != 101:
-                logger.info(f"用户真实交互：{len(items)},{items}")
-                logger.info(f"用户生成的负样本数量有{len(neg_items)}")
-                logger.info(f"用户ID: {user}, 生成样本数量: {len(item_idx)}")     
-            assert len(item_idx) == 101 , "负采样样本数量不对, 应该是101个"
+                logger.info(f"interactions：{len(items)},{items}")
+                logger.info(f"number of neg_items{len(neg_items)}")
+                logger.info(f"user ID: {user}, number of sample: {len(item_idx)}")
+            assert len(item_idx) == 101 , "the number of items for evaluation is not 101"
 
             return user, seq, seq2, mask, item_idx, items[:1],mixed_seq,mixed_time
         
-        raise Exception("只预测第一个物品")
+        raise Exception("only predict the first item")
         return user, seq, seq2, mask, items,mixed_seq,mixed_time
 
 class CDSRDataset_Increment(baseDataset):
@@ -863,7 +862,7 @@ class CDSRDataset_Increment(baseDataset):
                 if nxt != 0: neg[idx] = random_neq(1, self.itemnum1 + 1, ts)
                 nxt = i
                 if nxt > self.itemnum1:
-                    print(f"errro:{self.itemnum1}< {nxt} 不是这个领域的物品")
+                    print(f"errro:{self.itemnum1}< {nxt} is not the item of this domain ")
                 idx -= 1
                 if idx == -1: break
 
@@ -981,7 +980,7 @@ class CDSRDataset_Increment(baseDataset):
             
             neg_items = self.negatvie_items[user]
             item_idx = [target_item] + neg_items
-            assert len(item_idx) == 101 , "负采样样本数量不对, 应该是101个"
+            assert len(item_idx) == 101 , "the number of items for evaluation is not 101"
 
 
             mixed_seq = []

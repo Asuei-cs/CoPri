@@ -115,11 +115,10 @@ def objective(trial, args):
     while retries < args.max_retries:
     
         optuna_args = argparse.Namespace()
-        # 从 opt_params 参数中拿到需要调整的参数。
         for param, values in args.opt_params.items():
             setattr(optuna_args, param, trial.suggest_categorical(param, values))
         
-        args.trial_id = trial.number # 从optuna中拿到id
+        args.trial_id = trial.number
         
         # When you finish sampling, check whether there are trials with same values.
         #Modify the tuple of trial status, adding the running trial status to avoid sampling the same hyperparameter combination        
@@ -131,14 +130,14 @@ def objective(trial, args):
             if trial.params == t.params:
                 retries += 1
                 found_duplicate = True
-                print(f"重复的参数组合: {t.params}，正在重试（{retries}/{args.max_retries}）")
+                print(f"Duplicate parameter combinations: {t.params}，Retrying（{retries}/{args.max_retries}）")
                 break
         if not found_duplicate:
             break
             
 
     if retries == args.max_retries:
-        print(f"超过最大重试次数 ({args.max_retries})，终止试验。")
+        print(f"Exceeded the maximum number of retries ({args.max_retries}), terminate the trial.")
         raise optuna.TrialPruned()
 
     args_dict = vars(args)

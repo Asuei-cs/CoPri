@@ -52,7 +52,6 @@ class SASRec(torch.nn.Module):
     def _init_weights(self, module):
         if self.args.init_type == "normal":
             # logger.info("use the normal init ")
-            # 原始的初始化方法
             if isinstance(module, (nn.Linear, nn.Embedding)):
                 module.weight.data.normal_(mean=0.0, std=0.02)
             elif isinstance(module, nn.LayerNorm):
@@ -61,7 +60,6 @@ class SASRec(torch.nn.Module):
             if isinstance(module, nn.Linear) and module.bias is not None:
                 module.bias.data.zero_()
         else:
-            # Xavier初始化方法
             # logger.info("use the xavier init ")
             for name, param in self.named_parameters():
                 try:

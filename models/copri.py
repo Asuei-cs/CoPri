@@ -175,7 +175,6 @@ class CoPri(nn.Module):
     def _init_weights(self, module):
         if self.args.init_type == "normal":
             # logger.info("use the normal init ")
-            # 原始的初始化方法
             if isinstance(module, (nn.Linear, nn.Embedding)):
                 module.weight.data.normal_(mean=0.0, std=0.02)
             elif isinstance(module, nn.LayerNorm):

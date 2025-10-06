@@ -144,7 +144,6 @@ class MGCL(torch.nn.Module):
     def _init_weights(self, module):
         if self.args.init_type == "normal":
             logger.info("use the normal init ")
-            # 原始的初始化方法
             if isinstance(module, (nn.Linear, nn.Embedding)):
                 module.weight.data.normal_(mean=0.0, std=0.02)
             elif isinstance(module, nn.LayerNorm):
@@ -153,7 +152,6 @@ class MGCL(torch.nn.Module):
             if isinstance(module, nn.Linear) and module.bias is not None:
                 module.bias.data.zero_()
         else:
-            # Xavier初始化方法
             logger.info("use the xavier init ")
             for name, param in self.named_parameters():
                 try:
@@ -169,8 +167,7 @@ class MGCL(torch.nn.Module):
         return user_train1
 
     def log2feats(self, user_ids, log_seqs1, log_seqs2, mask, isTrain):
-        
-        # 检查 log_seqs2 是否全部为零 # 注意我们是batch输入，因此要所有的都是0才可以实现。
+
 
         has_log_seqs2 = not np.all(log_seqs2 == 0)
         
@@ -226,8 +223,7 @@ class MGCL(torch.nn.Module):
             att_seq1 = self.forward_layers[i](att_seq1)
             att_seq1 *= ~timeline_mask1.unsqueeze(-1)
 
-        
-        # 如果第二个领域有数据
+
         if has_log_seqs2:
 
             u2, gcn_hidden2 = self.GCN.get_embedding(torch.LongTensor(user_ids).to(self.dev),
@@ -358,8 +354,7 @@ class MGCL(torch.nn.Module):
         if self.args.loss_type == "CE":
             
             pos = torch.LongTensor(pos).to(self.args.device)
-            test_item_emb = self.item_emb.weight[1:self.args.itemnum1 + 1, :] # 物品编码是从1开始的，0是padding值。
-            # 这里需要保留padding进行计算，不然会导致CEloss找不到对应位置。即映射概率值是从0开始，但是pos的标签是从1开始索引的。
+            test_item_emb = self.item_emb.weight[1:self.args.itemnum1 + 1, :]
             logits = seq_out @ test_item_emb.T
             indices = torch.where(pos.view(-1) != 0)
             loss = F.cross_entropy(logits.view(-1, logits.shape[-1])[indices], pos.view(-1)[indices]-1, reduction='mean')
@@ -392,37 +387,19 @@ class MGCL(torch.nn.Module):
         return loss
 
 
-    # ## require
-    # def predict_full(self, batch):
-    #     isTrain = True  #在任何时候图卷积都是有必要的。
-    #     u, seq, seq2, mask, items = batch
-        
-    #     seq_out, con_loss, con_loss2, con_loss3 = self.log2feats(u, np.array(seq), np.array(seq2), np.array(mask), isTrain)
-    #     seq_out = seq_out[:, -1, :]
-    #     # [item_num hidden_size]
-    #     test_item_emb = self.item_emb.weight[1:self.args.itemnum1+1,:]
-    #     # [batch hidden_size ]
-    #     rating_pred = torch.matmul(seq_out, test_item_emb.transpose(0, 1))
-    #     return rating_pred
-    
+
       ## require
     def predict_full(self, batch):
-        isTrain = True  #在任何时候图卷积都是有必要的。
+        isTrain = True
         u, seq, seq2, mask, item_idx, items,_,_ = batch
         seq_out, con_loss, con_loss2, con_loss3 = self.log2feats(u, np.array(seq), np.array(seq2), np.array(mask), isTrain)
         seq_out = seq_out[:, -1, :]
         if self.args.sample_eval:
-            # 局部评估:使用正样本+采样负样本的item embedding
             test_item_emb = self.item_emb(torch.LongTensor(np.array(item_idx)).to(self.dev))
-            # 输出维度为：[batch,item_idx_num,hidden_size]
             rating_pred = torch.matmul(test_item_emb, seq_out.unsqueeze(-1)).squeeze(-1)
-            # 输出维度为：[batch,item_idx_num]
         else:
-            # 全局评估:使用所有item的embedding(除padding token)
             test_item_emb = self.item_emb.weight[1:self.args.itemnum1+1,:]
-            # 输出维度为：[item_num,hidden_size]
             rating_pred = torch.matmul(seq_out, test_item_emb.transpose(0, 1))
-            # 输出维度为：[batch,item_num]
         return rating_pred
 
 
@@ -447,8 +424,7 @@ class GNN(Module):
 
         nn.init.xavier_uniform_(self.w_ih)
         nn.init.xavier_uniform_(self.w_hh)
-        
-        # 偏置初始化为零
+
         nn.init.zeros_(self.b_ih)
         nn.init.zeros_(self.b_hh)
         nn.init.zeros_(self.b_iah)
