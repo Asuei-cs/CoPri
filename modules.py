@@ -172,7 +172,6 @@ class Embeddings(nn.Module):
         items_embeddings = self.item_embeddings(input_ids)
         position_embeddings = self.position_embeddings(position_ids)
         embeddings = items_embeddings + position_embeddings
-        # 修改属性
         embeddings = self.LayerNorm(embeddings)
         embeddings = self.dropout(embeddings)
         return embeddings
