@@ -43,7 +43,6 @@ class Trainer:
     def get_full_sort_score(self, epoch, pred_list, truth_list):
         ks = self.args.ks
         sample_num = pred_list.shape[0]
-         # 初始化
         total_metrics = {f'Recall@{k}': 0.0 for k in ks}
         total_metrics.update({f'NDCG@{k}': 0.0 for k in ks})
 
@@ -248,7 +247,7 @@ class CDSRTrainer(Trainer):
                  
             cnt_total_items = sum(len(items) for items in truth_list)
 
-            logger.info(f'本次评估的物品数量有{cnt_total_items}个')
+            logger.info(f'number{cnt_total_items}')
             valid_user_num = len(dataloaders["eva_loader"].dataset)
             logger.info(f'current type user nums is {valid_user_num}')  
             
@@ -458,13 +457,13 @@ class OverlapTrainer_mark_items(Trainer):
                     original_rating_pred = rating_pred.clone()
 
                     original_preds = torch.argsort(original_rating_pred, dim=1, descending=True) + 1
-                    original_topk = original_preds[:, :20].cpu().numpy()  # 取前20个推荐
+                    original_topk = original_preds[:, :20].cpu().numpy()  
 
                     mark_items = torch.tensor(np.array(batch[6]), dtype=torch.bool).to(self.args.device)
-                    rating_pred = rating_pred.masked_fill(~mark_items, -np.inf)  # 使用反向掩码
+                    rating_pred = rating_pred.masked_fill(~mark_items, -np.inf) 
 
                     masked_preds = torch.argsort(rating_pred, dim=1, descending=True) + 1
-                    masked_topk = masked_preds[:, :20].cpu().numpy()  # 取前20个推荐
+                    masked_topk = masked_preds[:, :20].cpu().numpy()  
 
 
                     if not self.args.sample_eval:
@@ -495,7 +494,7 @@ class OverlapTrainer_mark_items(Trainer):
                         self.args.ks, 
                         total_metrics, 
                         preds.cpu().numpy(),
-                        batch[5]  # batch[5]是真实的items
+                        batch[5] 
                     )
                     truth_list.extend(batch[5])
                     # res_data["user_id"].extend(list(batch[0]))
@@ -509,8 +508,8 @@ class OverlapTrainer_mark_items(Trainer):
                  
             cnt_total_items = sum(len(items) for items in truth_list)
 
-            # 统计用户真实交互的物品数量有多少 truth_list 中的数量 
-            logger.info(f'本次评估的物品数量有{cnt_total_items}个')
+            
+            logger.info(f'number{cnt_total_items}个')
             valid_user_num = len(dataloaders["eva_loader"].dataset)
             logger.info(f'current type user nums is {valid_user_num}')  
             
@@ -542,23 +541,23 @@ class OverlapTrainer_mark_items(Trainer):
 
                 
 
-                if truth_item != "无":
+                if truth_item != "none":
                     truth_item = int(truth_item)
                     original_rank = np.where(original_preds[i].cpu().numpy() == truth_item)[0]
                     masked_rank = np.where(masked_preds[i].cpu().numpy() == truth_item)[0]
                     
-                    original_position = original_rank[0] + 1 if len(original_rank) > 0 else "未出现"
-                    masked_position = masked_rank[0] + 1 if len(masked_rank) > 0 else "未出现"
+                    original_position = original_rank[0] + 1 if len(original_rank) > 0 else "no find"
+                    masked_position = masked_rank[0] + 1 if len(masked_rank) > 0 else "no find"
                     
-                    # print(f"目标物品在掩码前的排名: {original_position}")
-                    # print(f"目标物品在掩码后的排名: {masked_position}")
+                    # print(f"the rank of the target item befor maping: {original_position}")
+                    # print(f"the rank of the target item after maping: {masked_position}")
                 
-                print(f"Top-10列表重叠度: {overlap}个物品 ({overlap_ratio:.1f}%)")
+                print(f"Top-10: {overlap}items ({overlap_ratio:.1f}%)")
                 
-                # 检查是否有历史交互物品出现在掩码前的Top-10中
+                
                 hist_in_original = [item for item in original_topk[i, :10] if item in masked_items]
                 if hist_in_original:
-                    print(f"警告：掩码前Top-10中有{len(hist_in_original)}个历史交互物品: {hist_in_original}")
+                    print(f"Warn：There are{len(hist_in_original)}interacted items: {hist_in_original}")
 
 
             all_original_top10 = original_preds[:, :10].cpu().numpy()
@@ -570,7 +569,7 @@ class OverlapTrainer_mark_items(Trainer):
                 total_overlap += overlap
 
             avg_overlap = total_overlap / (len(batch[0]) * 10.0) * 100
-            print(f"\n批次总体统计:")
-            print(f"平均Top-10重叠率: {avg_overlap:.2f}%")
+            print(f"\n batch:")
+            print(f"Top-10: {avg_overlap:.2f}%")
 
             return self.toString(epoch, total_metrics)
