@@ -47,7 +47,7 @@ def gen_neg_sample(df_data, sample_num=100):
 
 def read_Rees46(fname, fname2):
     local_path = "Data/Rees46/"
-    # 读取里面的train valid test 文件
+    
     train_all = pd.read_csv(local_path + '/train_data.csv', header=0)
     valid_all = pd.read_csv(local_path + '/valid_data.csv', header=0)
     test_all = pd.read_csv(local_path + '/test_data.csv', header=0)
@@ -286,7 +286,7 @@ def data_partition_leave_one_out(parent_dir, fname, fname2):
             if key in dict1:
                 dict1[key].extend(dict2[key])
             else:
-                raise KeyError(f"键 {key} 不存在于dict1中")
+                raise KeyError(f"key {key} not in dict1")
     
     Time1_stage1_val = d1_val_stage1.groupby("user_id")["timestamp"].apply(list).to_dict()
     Time1_stage2_test = d1_test_stage2.groupby("user_id")["timestamp"].apply(list).to_dict()
@@ -321,7 +321,7 @@ def data_partition_leave_one_out(parent_dir, fname, fname2):
     if os.path.exists(d1_neg_file):
         d1_neg = pd.read_csv(d1_neg_file, header=None)
     else:
-        logger.info(f"负采样文件不存在，生成负采样文件: {d1_neg_file}")
+        logger.info(f"no find neg_file,get neg_file: {d1_neg_file}")
         d1_neg = gen_neg_sample(d1_all)
         d1_neg.to_csv(d1_neg_file, index=False, header=False)
 
@@ -371,12 +371,12 @@ class baseDataset(Dataset):
         elif self.data_type == "valid" or self.data_type =="test":
             for user in range(1, self.usernum + 1):
 
-                user_in_train1 = user in self.user_train1 and len(self.user_train1[user]) >= 2 # 要求一定要有两个物品
-                user_in_train2 = user in self.user_train2 and len(self.user_train2[user]) >= 2 # 要求一定要有两个物品
+                user_in_train1 = user in self.user_train1 and len(self.user_train1[user]) >= 2 
+                user_in_train2 = user in self.user_train2 and len(self.user_train2[user]) >= 2 
                 
                 user_in_eva =  user in self.user_eva and len(self.user_eva[user]) >= 1
                 
-                if user_type == "target_overlap" and user_in_train1 and user_in_eva: # 包括单个领域和重叠用户的数据。
+                if user_type == "target_overlap" and user_in_train1 and user_in_eva: 
                     valid_users.append(user)
                 elif user_type == "overlap" and user_in_train1 and user_in_train2 and user_in_eva:
                     valid_users.append(user)

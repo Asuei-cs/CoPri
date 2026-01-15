@@ -102,13 +102,6 @@ def train_model(args):
 
 
 def objective(trial, args):
-    ## 调优参数
-    # optuna_args = argparse.Namespace(
-    #     hidden_units=trial.suggest_categorical('hidden_units', [64, 128, 256]),
-    #     num_layers=trial.suggest_categorical('num_layers', [1, 2, 3]),
-    #     dropout_rate=trial.suggest_categorical('dropout_rate', [0,0.1,0.2,0.3, 0.4, 0.5]),
-    #     l2_emb = trial.suggest_categorical('l2_emb', [0, 1e-3, 1e-2]),
-    # )
     
     retries = 0
     
