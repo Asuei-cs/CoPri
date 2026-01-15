@@ -1,0 +1,8 @@
+hidden_units: 128
+alpha: 0.5
+lamda: 0.0
+gamma: 0.0
+
+opt_params:
+  hidden_units: [64, 128]
+  alpha: [0.3, 0.5, 0.7]
