@@ -1,6 +1,5 @@
 # CoPri: A Collective Paradigm with Prioritized Sequential Modeling for Cross-domain Recommendation
 
-
 ### Environment
 We provide the complete environment configuration in the 'environment.yaml' file, with the key packages summarized as follows：
 - python 3.13.3
