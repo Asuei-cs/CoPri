@@ -1,4 +1,4 @@
-# CoPri: A Collective Paradigm with Prioritized Sequential Modeling for Cross-domain Recommendation
+# Bridging Domains with Priority: A Collective Mechanism for Cross-Domain Sequential Recommendation
 
 
 ### Environment
