@@ -1,0 +1,19 @@
+hidden_units: 128
+num_blocks: 2
+num_heads: 1
+dropout_rate: 0.2
+maxlen: 50
+
+loss_type: 'CE'
+init_type: 'normal'
+
+# HorizonRec
+timesteps: 32
+beta_sche: 'cosine'
+beta_start: 0.001
+beta_end: 0.02
+diffusion_loss_weight: 0.1
+fusion_weight: 0.6
+temperature: 1.0
+mdr_top_k: 10
+
