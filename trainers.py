@@ -509,7 +509,7 @@ class OverlapTrainer_mark_items(Trainer):
             cnt_total_items = sum(len(items) for items in truth_list)
 
             
-            logger.info(f'number{cnt_total_items}个')
+            logger.info(f'number of items: {cnt_total_items}')
             valid_user_num = len(dataloaders["eva_loader"].dataset)
             logger.info(f'current type user nums is {valid_user_num}')  
             
@@ -527,8 +527,7 @@ class OverlapTrainer_mark_items(Trainer):
             detailed_users = min(3, len(batch[0]))
             for i in range(detailed_users):
                 user_id = batch[0][i]
-                truth_item = batch[5][i][0] if len(batch[5][i]) > 0 else "无"
-                
+                truth_item = batch[5][i][0] if len(batch[5][i]) > 0 else "None"
 
                 original_set = set(original_topk[i, :10])
                 masked_set = set(masked_topk[i, :10])

@@ -282,7 +282,7 @@ def update_namespace_from_yaml(namespace, yaml_path, unknown_args={}):
             except ValueError:
                 pass
         elif isinstance(value, (int, float)) and value == int(value) and value > 0:
-            value = int(value)  # 确保是正整数
+            value = int(value)  # Ensure positive integer
         elif isinstance(value, list):
             value = [convert_value(v) for v in value]
         elif isinstance(value, dict):

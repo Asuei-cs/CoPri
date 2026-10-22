@@ -71,7 +71,7 @@ class SASRec(torch.nn.Module):
     def log2feats(self, log_seqs):
 
 
-        # log_seqs=self.shuffle_items(log_seqs) # 随机
+        # log_seqs=self.shuffle_items(log_seqs) # random
 
         seqs = self.item_emb(torch.LongTensor(log_seqs).to(self.dev))
 

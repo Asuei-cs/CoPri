@@ -7,7 +7,7 @@ def str2bool(s):
         raise ValueError('Not a valid boolean string')
     return s == 'true'
 
-# 自定义解析函数，将字符串转换为列表
+# Custom parsing function to convert string to list
 def str_to_list(input_str):
     try:
         import ast
@@ -22,12 +22,11 @@ def parse_args():
     # Dataset parameters
     # parser.add_argument('--target_domain',"-td", default='Food2', type=str, help='target dataset name')
     # parser.add_argument('--source_domain',"-sd", default='Kitchen2', type=str, help='source dataset name')
-    # parser.add_argument('--parent_dir', default='/home/zgy/yanjie/NewDataset4CDSR', type=str, help='path to the parent directory of the dataset') ## /home/zgy/chenshu/dataProcess/Rees46/overlap_data/
+    # parser.add_argument('--parent_dir', default='/home/xxx/Amazon/', type=str, help='path to the parent directory of the dataset') 
     # parser.add_argument('--datasets',default='Amazon',type=str)
     parser.add_argument('--target_domain',"-td", default='appliances', type=str, help='target dataset name')
     parser.add_argument('--source_domain',"-sd", default='computers', type=str, help='source dataset name')
-    parser.add_argument('--parent_dir', default='/home/zgy/chenshu/dataProcess/Rees46/overlap_data/', type=str, help='path to the parent directory of the dataset') ## /home/zgy/chenshu/dataProcess/Rees46/overlap_data/
-    # parser.add_argument('--parent_dir', default='/home/hemingkai/chenshu/Rees46/', type=str, help='path to the parent directory of the dataset') ## /home/zgy/chenshu/dataProcess/Rees46/overlap_data/
+    parser.add_argument('--parent_dir', default='/home/xxx/Rees46/', type=str, help='path to the parent directory of the dataset') 
     parser.add_argument('--datasets',default='Rees46',type=str)
 
     parser.add_argument('--overlap_ratio', default=1.0, type=float, help='the overlap ratio of users between source and target domain')

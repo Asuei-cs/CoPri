@@ -117,12 +117,12 @@ def get_spe_seq(n_item_a: int,
     """
     Through task-guided alignment.
     """
-    # 输入的是混合序列
-    A = seq[(0 < seq) & (seq <= n_item_a)]  # 分解出A域的序列（中间没有pad）
-    B = seq[seq > n_item_a]  # B域的序列
+    # Input is mixed sequence
+    A = seq[(0 < seq) & (seq <= n_item_a)]  # Extract sequence of domain A (without padding)
+    B = seq[seq > n_item_a]  # Sequence of domain B
 
 
-    seq_a = np.logical_and(0 < gt, gt <= n_item_a).astype(int)  # 预测目标gt在A域的位置 [1,0,0,1,……]
+    seq_a = np.logical_and(0 < gt, gt <= n_item_a).astype(int)  # Position of prediction target gt in domain A [1,0,0,1,...]
     seq_b = (gt > n_item_a).astype(int)
 
     # remove first interaction
@@ -190,13 +190,13 @@ def process_train(n_item_a: int,
         len_trim = gt.shape[0]
         gt_neg = np.zeros((len_trim, n_neg_x2), dtype=int)
 
-        # 找出非零位置
+        # Find non-zero positions
         valid_idx = np.where(gt != 0)[0]
         num_valid = valid_idx.size
 
         if num_valid > 0:
             rng = np.random.default_rng()
-            # 批量采样
+            # Batch sampling
             neg_a = rng.choice(cand_a, size=(num_valid, n_neg), replace=False)
             neg_b = rng.choice(cand_b, size=(num_valid, n_neg), replace=False)
             gt_neg[valid_idx] = np.concatenate([neg_a, neg_b], axis=1)
@@ -456,18 +456,18 @@ class ABXI(nn.Module):
         u, seq, pos, neg, seq2, _ ,mixed_seq,mixed_time,_ = batch
 
         # first_nonzero_pos = np.array([row[row != 0][0] if np.any(row != 0) else 0 for row in pos])
-        # # 变成 shape (256, 1)
+        # # Reshape to (256, 1)
         # first_nonzero_pos = first_nonzero_pos.reshape(-1, 1)
 
         mask = pos != 0
-        # 找到每行第一个非零元素的索引
+        # Find the index of the first non-zero element in each row
         idx = np.argmax(mask, axis=1)
-        # 如果整行都是0，则mask.sum(axis=1)==0
+        # If the entire row is 0, then mask.sum(axis=1)==0
         first_nonzero_pos = pos[np.arange(pos.shape[0]), idx]
         first_nonzero_pos[mask.sum(axis=1) == 0] = 0
         first_nonzero_pos = first_nonzero_pos.reshape(-1, 1)
 
-        # 拼接
+        # Concatenate
         mixed_seq_new = np.concatenate([mixed_seq, first_nonzero_pos], axis=1)
 
         seq_x, seq_a, seq_b, gt,gt_neg=process_train(self.n_item_a,self.len_trim,np.array(mixed_seq_new),self.n_item,self.n_neg)
@@ -496,8 +496,8 @@ class ABXI(nn.Module):
         return loss
     def CE_loss(self,seq_out,pos):
         pos = torch.LongTensor(pos).to(self.args.device)
-        test_item_emb = self.ei.weight[1:self.args.itemnum1 + 1, :]  # 物品编码是从1开始的，0是padding值。
-        # 这里需要保留padding进行计算，不然会导致CEloss找不到对应位置。即映射概率值是从0开始，但是pos的标签是从1开始索引的。
+        test_item_emb = self.ei.weight[1:self.args.itemnum1 + 1, :]  # Item encoding starts from 1, 0 is padding value.
+        # Need to keep padding for calculation, otherwise CEloss will not find the corresponding position. That is, the mapping probability value starts from 0, but the pos label is indexed from 1.
         logits = seq_out @ test_item_emb.T
         indices = torch.where(pos.view(-1) != 0)
         loss = F.cross_entropy(logits.view(-1, logits.shape[-1])[indices], pos.view(-1)[indices] - 1,
@@ -523,20 +523,20 @@ class ABXI(nn.Module):
 
         if self.args.sample_eval:
             item_idx = batch[4]
-            # 局部评估:使用正样本+采样负样本的item embedding
+            # Local evaluation: use positive samples + sampled negative samples' item embedding
             try:
                 test_item_emb = self.ei(torch.LongTensor(np.array(item_idx)).to(self.dev))
                 # test_item_emb = self.item_emb.weight[np.array(item_idx)]
             except Exception as e:
                 print(f"Error with item_idx: {item_idx}")
                 print(f"item_idx shape: {np.array(item_idx).shape}, dtype: {np.array(item_idx).dtype}")
-                raise e  # 输出维度为：[batch,item_idx_num,hidden_size]
+                raise e  # Output dimension: [batch,item_idx_num,hidden_size]
             rating_pred = torch.matmul(test_item_emb, h.unsqueeze(-1)).squeeze(-1)
-            # 输出维度为：[batch,item_idx_num]
+            # Output dimension: [batch,item_idx_num]
         else:
-            # 全局评估:使用所有item的embedding(除padding token)
+            # Global evaluation: use all item embeddings (except padding token)
             test_item_emb = self.ei.weight[1:self.args.itemnum1 + 1, :]
-            # 输出维度为：[item_num,hidden_size]
+            # Output dimension: [item_num,hidden_size]
             rating_pred = torch.matmul(h,test_item_emb.transpose(0, 1))
-            # 输出维度为：[batch,item_num]
+            # Output dimension: [batch,item_num]
         return rating_pred

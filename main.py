@@ -123,7 +123,7 @@ def objective(trial, args):
             if trial.params == t.params:
                 retries += 1
                 found_duplicate = True
-                print(f"Duplicate parameter combinations: {t.params}，Retrying（{retries}/{args.max_retries}）")
+                print(f"Duplicate parameter combinations: {t.params}, Retrying ({retries}/{args.max_retries})")
                 break
         if not found_duplicate:
             break

@@ -190,12 +190,12 @@ class CDSASRec(nn.Module):
         
         if self.args.loss_type == "CE":
             pos = torch.LongTensor(pos).to(self.dev)
-            test_item_emb = self.item_emb.weight[1:self.args.itemnum1 + 1, :] # 物品编码是从1开始的，0是padding值。
-            # 这里需要保留padding进行计算，不然会导致CEloss找不到对应位置。即映射概率值是从0开始，但是pos的标签是从1开始索引的。
+            test_item_emb = self.item_emb.weight[1:self.args.itemnum1 + 1, :] # Item encoding starts from 1, 0 is padding value.
+            # Need to keep padding for calculation, otherwise CEloss will not find the corresponding position. That is, the mapping probability value starts from 0, but the pos label is indexed from 1.
             logits = seq_out @ test_item_emb.T
             indices = torch.where(pos.view(-1) != 0)
             loss = F.cross_entropy(logits.view(-1, logits.shape[-1])[indices], pos.view(-1)[indices]-1, reduction='mean')
-            
+
         else:
             loss = self.cross_entropy(seq_out,pos,neg)
     

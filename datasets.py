@@ -227,11 +227,11 @@ def data_partition_leave_one_out(parent_dir, fname, fname2):
     d1_test_stage2 = []
     
     for _, group in d1_grouped:
-        if len(group) > 3:  # 至少需要3条记录
+        if len(group) > 3:  # Need at least 3 records
             d1_train_stage1.append(group.iloc[:-2])
             d1_val_stage1.append(group.iloc[-2:-1])
             d1_test_stage2.append(group.iloc[-1:])
-    
+
     d1_train_stage1 = pd.concat(d1_train_stage1)
     d1_val_stage1 = pd.concat(d1_val_stage1)
     d1_test_stage2 = pd.concat(d1_test_stage2)
@@ -569,7 +569,7 @@ class C2DSR_Dataset(baseDataset):
                 x_position[idx] = x_cnt
                 x_cnt += 1
                 yd[idx] = self.itemnum1 + self.itemnum2  # PAD
-            else:  # 领域2
+            else:  # Domain 2
                 xd[idx] = self.itemnum1 + self.itemnum2  # PAD
                 yd[idx] = item
                 y_position[idx] = y_cnt
@@ -785,13 +785,11 @@ class CDSRDataset(baseDataset):
         if self.eval_only_first:
             item_idx = items + neg_items
             if len(item_idx) != 101:
-                logger.info(f"interactions：{len(items)},{items}")
+                logger.info(f"interactions: {len(items)},{items}")
                 logger.info(f"number of neg_items{len(neg_items)}")
                 logger.info(f"user ID: {user}, number of sample: {len(item_idx)}")
             assert len(item_idx) == 101 , "the number of items for evaluation is not 101"
 
-            return user, seq, seq2, mask, item_idx, items[:1],mixed_seq,mixed_time
-        
         raise Exception("only predict the first item")
         return user, seq, seq2, mask, items,mixed_seq,mixed_time
 

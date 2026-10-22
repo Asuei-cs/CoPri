@@ -157,7 +157,7 @@ class Embeddings(nn.Module):
     def __init__(self, args):
         super(Embeddings, self).__init__()
 
-        self.item_embeddings = nn.Embedding(args.itemnum+1, args.hidden_units, padding_idx=0) # 不要乱用padding_idx
+        self.item_embeddings = nn.Embedding(args.itemnum+1, args.hidden_units, padding_idx=0) # Don't misuse padding_idx
         self.position_embeddings = nn.Embedding(args.maxlen, args.hidden_units)
 
         self.LayerNorm = LayerNorm(args.hidden_units, eps=1e-12)
