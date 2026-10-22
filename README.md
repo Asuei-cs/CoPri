@@ -12,8 +12,7 @@ We provide the complete environment configuration in the 'environment.yaml' file
 - optuna 4.3.0
 
 ### Datasets
-As the dataset files are too large, we host them separately at the following link.
-https://www.alipan.com/s/g9kd6VU93YB
+Due to the large size of the datasets, a public download link will be made available after the paper is accepted.
 
 
 ### Usage

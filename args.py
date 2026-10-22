@@ -22,11 +22,11 @@ def parse_args():
     # Dataset parameters
     # parser.add_argument('--target_domain',"-td", default='Food2', type=str, help='target dataset name')
     # parser.add_argument('--source_domain',"-sd", default='Kitchen2', type=str, help='source dataset name')
-    # parser.add_argument('--parent_dir', default='/home/xxx/Amazon/', type=str, help='path to the parent directory of the dataset') 
+    # parser.add_argument('--parent_dir', default='/Data/Amazon/', type=str, help='path to the parent directory of the dataset') 
     # parser.add_argument('--datasets',default='Amazon',type=str)
     parser.add_argument('--target_domain',"-td", default='appliances', type=str, help='target dataset name')
     parser.add_argument('--source_domain',"-sd", default='computers', type=str, help='source dataset name')
-    parser.add_argument('--parent_dir', default='/home/xxx/Rees46/', type=str, help='path to the parent directory of the dataset') 
+    parser.add_argument('--parent_dir', default='/Data/Rees46/', type=str, help='path to the parent directory of the dataset') 
     parser.add_argument('--datasets',default='Rees46',type=str)
 
     parser.add_argument('--overlap_ratio', default=1.0, type=float, help='the overlap ratio of users between source and target domain')
